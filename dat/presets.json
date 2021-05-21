@@ -1,0 +1,29 @@
+{
+    "bodytubes":{
+        "T70-H":{
+            "length":1700,
+            "outerdiameter":54,
+            "innerdiameter":52,
+            "material":"S.cardboard",
+            "isheatresistant":false
+        }
+    },
+    "nosecones":{
+        "test":{
+            "generator":"ogive",
+            "gLength":100,
+            "gBaseRadius":55,
+            "isShoulder":true,
+            "shoulderLength":20,
+            "shoulderDiameter":54,
+            "isHollow":false,
+            "material":"S.balsa"
+        }
+    },
+    "couplers":{
+
+    },
+    "bukheads":{
+
+    }
+}
