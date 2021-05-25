@@ -1,3 +1,8 @@
 g++ --version | head -n 1 
-rm ../bin/rocket.o
-g++ -std=c++17 -o ../bin/rocket.o -B . main.cpp
+# grab the last version number from file
+#lastnum=cat ../dat/version.txt
+lastnum=$(<../dat/version.txt)
+newnum=$((lastnum +1))
+fname="rocket$newnum.o"
+rm ../bin/rocket$lastnum.o
+g++ -std=c++17 -o ../bin/$fname -B . main.cpp
