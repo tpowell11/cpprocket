@@ -21,39 +21,44 @@ namespace cui{
             std::cout << f.rdbuf() << "\n";
         }
     }
+//* print version number
+    void printBuild(){
+        std::ifstream f("../dat/version.txt");
+        if(f.is_open()){
+            std::cout << f.rdbuf() << "\n";
+        }
+    }
 //* reusable prompt strings
 
     const char* constMethodPrompt = "Select Construction Method:\n"
     "[1]Preset (dat/presets.json)\n"
     "[2]Parameter input\n"
-    "]";
+    "c]";
     const char* matMethodPrompt = "Choose material selection method:\n"
     "[1]Existing (dat/materials.json)\n"
-    "[2]Create new\n]";
-    const char* presetPrompt = "Enter Preset Name\n]";
+    "[2]Create new\nmaterial]";
+    const char* presetPrompt = "Enter Preset Name\nmaterial]";
 //* selection dialogs
 
     int selectComponentType(){
-        int inp;
         const char* s = 
         "Select component type to add\n"
         "[1]Nosecone\n"
         "[2]Bodytube\n"
-        "[3]Switch to internal components\n]";
-        std::cout << s;
-        std::cin >> inp;
+        "[3]Switch to internal components\ncomponents]";
+        int inp = cui::promptInput<int>(s);
         return inp;
     }
 //* component construction dialogs
 
     //builds a nosecone
-    void addNosecone(rocket::Rocket rocket){
+    void addNoseo(rocket::Rocket r){
         int inp = promptInput<int>(constMethodPrompt);
         std::string pName;
-        rocket::Nosecone cone;
+        rocket::Nosecone o;
         switch(inp){
             case 1:
-                cone.loadPreset(cui::promptInput<char*>("Preset name\n]"));
+                o.loadPreset(cui::promptInput<char*>("Preset name\nnosecone]"));
                 break;
             case 2:
                 std::cout << "Enter Generator type:\n"
@@ -61,45 +66,62 @@ namespace cui{
                 "[2]Ogive\n"
                 "[3]Ellipsoid\n"
                 "[4]Haack Series\n"
-                "[5]Power Series\n]";
-                std::cin >> cone.generator;
-                cone.gLength = cui::promptInput<float>("Enter Length of Curved Portion:\n]");
-                cone.gDiameter = cui::promptInput<float>("Enter base diameter of curved portion:\n]");
-                cone.gParameter = cui::promptInput<float>("Enter the shape parameter for the generator:\n]");
-                cone.isShoulder = cui::promptInput<float>("Does the nosecone have a shoulder 0: No,1: Yes\n]");
-                if(cone.isShoulder){
-                    cone.sLength = cui::promptInput<float>("Enter length of shoulder:\n]");
-                    cone.sDiameter = cui::promptInput<float>("Enter diameter of shoulder:\n]");
+                "[5]Power Series\nnosecone]";
+                std::cin >> o.generator;
+                o.gLength = cui::promptInput<float>("Enter Length of Curved Portion:\nnosecone]");
+                o.gDiameter = cui::promptInput<float>("Enter base diameter of curved portion:\nnosecone]");
+                o.gParameter = cui::promptInput<float>("Enter the shape parameter for the generator:\nnosecone]");
+                o.isShoulder = cui::promptInput<float>("Does the noseo have a shoulder 0: No,1: Yes\nnosecone]");
+                if(o.isShoulder){
+                    o.sLength = cui::promptInput<float>("Enter length of shoulder:\nn->shoulder]");
+                    o.sDiameter = cui::promptInput<float>("Enter diameter of shoulder:\nn->shoulder]");
                 }
                 int matMethod = cui::promptInput<int>(cui::matMethodPrompt);
                 switch(matMethod){
                     case 1: 
-                        cone.material = mat::getMaterialS(cui::promptInput<std::string>("Enter material name:\n]"));
+                        while (1){
+                            try {
+                                o.material = mat::getMaterialS(cui::promptInput<std::string>("Enter material name:\nn->material]"));
+                                break;
+                            } catch (const std::exception& e){
+                                std::cout << "\nMaterial not found.\n";
+                            }
+                        }
                     case 2:
-                        cone.material.name = cui::promptInput<std::string>("Enter material name:\n]");
-                        cone.material.props.density = cui::promptInput<float>("Enter density:\n]");
-                        cone.material.props.compressiveStrength.s = cui::promptInput<float>("Compressive strength (megapascals):\n]");
+                        o.material.name = cui::promptInput<std::string>("Enter material name:\n]");
+                        o.material.props.density = cui::promptInput<float>("Enter density:\n]");
+                        o.material.props.compressiveStrength.s = cui::promptInput<float>("Compressive strength (megapascals):\n]");
                 }
-                mat::writeMaterial<mat::StructureMaterial>(cone.material, mat::data); //send new material to data
-                cone.name = cui::promptInput<std::string>("Component name (default 'Nosecone')\n]");
+                mat::writeMaterial<mat::StructureMaterial>(o.material, mat::data); //send new material to data
+                o.name = cui::promptInput<std::string>("Component name (default 'Noseo')\n]");
         }
-        rocket.addComponent(cone);
+        r.appendComponent<rocket::Nosecone>(o);
     }
 
-    //builds a bodytube
-    void addBodytube(rocket::Rocket r){
+    //builds a body
+    void addBodyo(rocket::Rocket r){
         int inp = promptInput<int>(constMethodPrompt);
-        rocket::Bodytube tube;
+        rocket::Bodytube o;
         switch(inp){
             case 1:
                 char pName[64];
                 std::cin >> pName;
-                tube.loadPreset(pName);
+                o.loadPreset(pName);
             case 2:
-                tube.length = cui::promptInput<float>("Enter length of tube:\n]");
-                tube.innerdiameter = cui::promptInput<float>("Enter inner diameter of tube:\n]");
-                tube.outerdiameter = cui::promptInput<float>("Enter outer diameter of tube:\n]");   
+                o.length = cui::promptInput<float>("Enter length of o:\nbodytube]");
+                o.innerdiameter = cui::promptInput<float>("Enter inner diameter of obodytubedyo]");
+                o.outerdiameter = cui::promptInput<float>("Enter outer diameter of obodytubedyo]");
+                int matMethod = cui::promptInput<int>(cui::matMethodPrompt);
+                switch(matMethod){
+                    case 1:
+                        o.material = mat::getMaterialS(cui::promptInput<std::string>("Enter material name:\nb->material]"));
+                    case 2:
+                        o.material.name = cui::promptInput<std::string>("Enter material name:\n]");
+                        o.material.props.density = cui::promptInput<float>("Enter density:\n]");
+                        o.material.props.compressiveStrength.s = cui::promptInput<float>("Compressive strength (megapascals):\n]");
+                }  
         }
+        r.appendComponent<rocket::Bodytube>(o);
 
     }
 
@@ -111,34 +133,39 @@ int main(int argc, char* argv[]) {
     //setup
     // mat::StructureMaterial mat = mat::StructureMaterial("balsa");
     // rocket::Component test(mat,"yeet");
-    // rocket::Bodytube testt("T70-H","templatetube");
-    // rocket::Nosecone cone("test","templatecone");
+    rocket::Bodytube testt("T70-H","templatecone");
+    rocket::Nosecone cone("test","templatetube");
     rocket::Rocket rock;
-    // rock.AddComponent(cone);
+    rock.appendComponent(cone);
     // rock.AddComponent(test);
-    // rock.AddComponent(testt);
+    rock.appendComponent(testt);
     // rock.printComponents();
     //application loop
     std::cout << "Enter command, h for help, q to quit\n";
+    std::cout << "Version 0.0."; 
+    cui::printBuild();
+    //std::cout << "\n"; 
     while(1){
         std::string inp = cui::promptInput<std::string>("]");
         if(inp.at(0) == 'c' || inp.at(0) == 'C'){
             switch(cui::selectComponentType()){
                 case 1:
-                    cui::addNosecone(rock);
+                    cui::addNoseo(rock);
                 case 2:
                     break;
                 case 3:
                     break;
             }
         } else if(inp.at(0) == 'l' || inp.at(0) == 'L'){
-            //rock.printComponents();
+            rock.show();
         } else if(inp.at(0) == 'h' || inp.at(0) == 'H'){
             cui::printHelp();
-        
         } else if(inp.at(0) == 'q' || inp.at(0) == 'Q'){
             mat::saveMaterialsFile(mat::data);
             exit(0);
+        } else if(inp.at(0) == 'v' || inp.at(0) == 'V'){
+            std::cout << "Version 0.0.";
+            cui::printBuild();
         }
     }
 }

@@ -7,6 +7,7 @@
 #include <string>
 #include <iterator>
 #include <stddef.h>
+//#include <exception.h>
 #include "json.hpp" //json
 #include "errors.hpp" //project errors
 #include "materialmanager.hpp" //materials management
@@ -41,6 +42,11 @@ namespace rocket {
             mat::StructureMaterial material;
             bool isExposed;
             int finishNumber;
+            void show(){
+                std::cout << "Component" << "\n";
+                std::cout << "\t" << "Name:" << name << "\n";
+                std::cout << "\t" << "Material Name:" << material.name << "\n";
+            }
     };
     //cout overload for components
     std::ostream &operator<<(std::ostream &os, Component const &m){
@@ -127,11 +133,27 @@ namespace rocket {
             //adds any component to the components vector
             void addComponent(std::variant<Component,Bodytube,Nosecone> part){
                 components.push_back(part);
+                //part.show();
             }
+            template <typename t>
+            void appendComponent(t part){
+                components.push_back(part);
+                part.show();
+            }
+            //!really auful way to do this
             void show(){
-                for(size_t i=0; i <= components.size(); i++){
-                    //std::get<AnyComponent> 
-                }
+                std::cout << "Size:" << components.size() << "\n";
+                // for(size_t i=0; i <= components.size(); i++){
+                //     while(1){
+                //         try{
+                //             std::get<0>(components[i]).show();
+                //         } catch(const std::exception& e) {
+                //             std::get<1>(components[i]).show();
+                //         } catch(...) {
+                //             std::get<2>(components[i]).show();
+                //         }
+                //     }
+                // }
             }
 
 
