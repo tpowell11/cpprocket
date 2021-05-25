@@ -1,23 +1,23 @@
 {
-    "line":{
-        "none":{
-            "density":0.0,
-            "ultimatestrength":0.0
-        }
-    },
-    "plane":{
-        "none":{
-            "density":0.0
-        }
-    },
-    "struct":{
+    "line": {
         "none": {
-            "density":0.0,
-            "Rs":10
-        },
+            "density": 0.0,
+            "ultimatestrength": 0.0
+        }
+    },
+    "plane": {
+        "none": {
+            "density": 0.0
+        }
+    },
+    "struct": {
         "balsa": {
-            "density":10.0,
-            "Rs":10
+            "Rs": 10,
+            "density": 10.0
+        },
+        "none": {
+            "Rs": 10,
+            "density": 0.0
         }
     }
 }

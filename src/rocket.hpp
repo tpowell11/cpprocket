@@ -26,7 +26,6 @@ using namespace nlohmann;
 // }
 
 namespace rocket {
-typedef std::variant<Component, Nosecone, Bodytube> AnyComponent;
 
     class Component {
         public:
@@ -126,22 +125,24 @@ typedef std::variant<Component, Nosecone, Bodytube> AnyComponent;
             Rocket()=default;
 
             //adds any component to the components vector
-            void addComponent(AnyComponent part){
+            void addComponent(std::variant<Component,Bodytube,Nosecone> part){
                 components.push_back(part);
             }
             void show(){
-                for(size_t i=0, i <= components.size(); i++){
-                    std::get<AnyComponent> 
+                for(size_t i=0; i <= components.size(); i++){
+                    //std::get<AnyComponent> 
                 }
             }
 
+
             //this line requires a compiler with c++17 support
-            std::vector<std::variant<Bodytube, Nosecone>> components;
+            std::vector<std::variant<Component, Bodytube, Nosecone>> components;
     };
-    std::ostream &operator<<(std::ostream &os, Rocket const &m){
-        for(size_t i = 0; i < m.components.size();++i){
-            std::cout << m.components[i] << "\n";
-        }
-    }
+    // std::ostream &operator<<(std::ostream &os, Rocket const &m){
+    //     for(size_t i = 0; i < m.components.size();++i){
+    //         std::cout << m.components[i] << "\n";
+    //     }
+    // }
+//typedef std::variant<Component, Nosecone, Bodytube> AnyComponent;
 }
 #endif

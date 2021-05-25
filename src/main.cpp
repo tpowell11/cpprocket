@@ -47,7 +47,7 @@ namespace cui{
 //* component construction dialogs
 
     //builds a nosecone
-    void addNosecone(rocket::Rocket r){
+    void addNosecone(rocket::Rocket rocket){
         int inp = promptInput<int>(constMethodPrompt);
         std::string pName;
         rocket::Nosecone cone;
@@ -83,7 +83,7 @@ namespace cui{
                 mat::writeMaterial<mat::StructureMaterial>(cone.material, mat::data); //send new material to data
                 cone.name = cui::promptInput<std::string>("Component name (default 'Nosecone')\n]");
         }
-        r.addComponent<rocket::Nosecone>(cone);
+        rocket.addComponent(cone);
     }
 
     //builds a bodytube
