@@ -62,17 +62,30 @@ namespace rocket {
             }
             Nosecone(std::string presetName, std::string Name = ""){
                 name = Name;
-                std::ifstream i("../dat/presets.json");
-                json j;
-                i >> j;
-                j["nosecones"][presetName];
+                loadPreset(Name);
             }
             Nosecone()=default;
-            void loadPreset(char* presetname){
+            void loadPreset(std::string presetname){
+                std::cout << presetname << "\n";
                 std::ifstream i("../dat/presets.json");
                 json j;
                 i >> j;
-                j["nosecones"][presetname];
+                //std::cout << j["nosecones"][presetname]["generator"] << "\n";
+                generator = j["nosecones"][presetname]["generator"];
+                gLength = j["nosecones"][presetname]["gLength"];
+                gDiameter = j["nosecones"][presetname]["gBaseRadius"];
+                isShoulder = j["nosecones"][presetname]["isShoulder"];
+                sLength = j["nosecones"][presetname]["shoulderLength"];
+                sDiameter = j["nosecones"][presetname]["shoulderDiameter"];
+                isHollow = j["nosecones"][presetname]["isHollow"];
+
+            }
+            void show(){
+                std::cout << "Nosecone" << "\n";
+                std::cout << "\t" << "Name: " << name << "\n";
+                std::cout << "\t" << "Material Name: " << material.name << "\n";
+                std::cout << "\t" << "Diameter: " << gDiameter << "\n";
+                std::cout << "\t" << "Generator: " << generator << "\n";
             }
             int generator;
             float gParameter;
@@ -82,6 +95,7 @@ namespace rocket {
             float sDiameter;
             float gLength;
             float gDiameter;
+            mat::StructureMaterial material;
     };
     // represents a bodytube
     class Bodytube: public Component{
@@ -124,25 +138,45 @@ namespace rocket {
             bool heatresistant;
     };
     
+    // union parts{
+    //     Component C();
+    //     Nosecone N();
+    //     Bodytube B();
+    // };
     //container for components
     class Rocket {
         //! Add method to remove components.
         public:
             Rocket()=default;
+            //file constructor
+            Rocket(std::string filename){
 
+            }
             //adds any component to the components vector
             void addComponent(std::variant<Component,Bodytube,Nosecone> part){
                 components.push_back(part);
                 //part.show();
             }
+
             template <typename t>
             void appendComponent(t part){
-                components.push_back(part);
+                std::variant<Component,Bodytube,Nosecone> v;
+                v = part;
+                components.push_back(v);
+                //Components.push_back()
                 part.show();
+                std::cout << "\n" << components.size() << "\n";
+                std::cout << std::get<t>(v) << "\n";
             }
+            // void pushComponent(Nosecone n){
+            //     union parts v;
+            //     v.N() = n;
+            //     Components.push_back(v);
+            // }
             //!really auful way to do this
             void show(){
                 std::cout << "Size:" << components.size() << "\n";
+                //std::cout << "Sizec:" << Components.size() << "\n";
                 // for(size_t i=0; i <= components.size(); i++){
                 //     while(1){
                 //         try{
@@ -159,6 +193,7 @@ namespace rocket {
 
             //this line requires a compiler with c++17 support
             std::vector<std::variant<Component, Bodytube, Nosecone>> components;
+            //std::vector<union parts>Components;
     };
     // std::ostream &operator<<(std::ostream &os, Rocket const &m){
     //     for(size_t i = 0; i < m.components.size();++i){

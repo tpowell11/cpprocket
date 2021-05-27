@@ -10,7 +10,7 @@
     },
     "nosecones":{
         "test":{
-            "generator":"ogive",
+            "generator":0,
             "gLength":100,
             "gBaseRadius":55,
             "isShoulder":true,
