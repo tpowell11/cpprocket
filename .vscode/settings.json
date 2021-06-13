@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.FCMacro": "python",
+        "*.eng": "xml",
+        "xstring": "cpp"
+    }
+}

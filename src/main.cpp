@@ -8,7 +8,7 @@
 namespace cui{
     //simple prompted input
     template<typename t>
-    inline t const promptInput(const char* prompt = ''){
+    inline t const promptInput(const char* prompt = ' '){
         std::variant<t,char> inp;
         std::cout << prompt;
         std::cin >> std::get<t>(inp);
