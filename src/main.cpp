@@ -7,8 +7,9 @@
 //#include "materialmanager.hpp"
 namespace cui{
     //simple prompted input
+    const char* f = 0;
     template<typename t>
-    inline t const promptInput(const char* prompt = ' '){
+    inline t const promptInput(const char* prompt = f){
         std::variant<t,char> inp;
         std::cout << prompt;
         std::cin >> std::get<t>(inp);
@@ -22,7 +23,7 @@ namespace cui{
 //* print help from file
     void printHelp(){
         std::ifstream f;
-        f.open("help.txt")
+        f.open("help.txt");
         if(f.is_open()){
             std::cout << f.rdbuf() << "\n";
         }
