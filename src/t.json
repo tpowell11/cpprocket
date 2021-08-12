@@ -1,0 +1,11 @@
+{
+    "name":"test",
+    "parts":[
+        {
+            "T":"NOSECONE"
+        },
+        {
+            "T":"TUBE"
+        }
+    ]
+}

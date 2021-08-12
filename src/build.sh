@@ -8,6 +8,6 @@ fp="../bin/rocket$lastnum.o"
 rm $fp
 g++ -std=c++17 -o ../bin/$fname -B . main.cpp -Wno-return-type # compile under new filename
 # if the compile was successful, remove old file
-if test -f "../bin/rocket$newnum.o"; then
+if [test -f "../bin/rocket$newnum.o"] then
     echo $newnum > ../dat/version.txt #update the version file
-fi
+#fi

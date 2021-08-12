@@ -1,3 +1,11 @@
-rm rocket
-# -B : adds cwd to includepath
-g++-7 -o rocket main.cpp -std=c++17 -B .
+lastnum=$(cat "../dat/version.txt")
+newnum=$((lastnum +1)) #increment
+echo "Build number $newnum"
+fname="rocket$newnum.o"
+fp="../bin/rocket$lastnum.o"
+rm $fp
+g++ -std=c++17 -o ../bin/$fname -B . main.cpp -Wno-return-type # compile under new filename
+# if the compile was successful, remove old file
+if [test -f "../bin/rocket$newnum.o"] then
+    echo $newnum >> "../dat/version.txt" #update the version file
+fi

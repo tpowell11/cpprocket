@@ -1,0 +1,11 @@
+{
+    "_":"This file stores surface finish information",
+    "0":{
+        "r":0,
+        "name":"ideal"
+    },
+    "256":{
+        "r":1,
+        "name":"max"
+    }
+}
