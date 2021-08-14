@@ -2,6 +2,7 @@
 // THIS PROGRAM USES M.K.S. UNITS 
 
 #include <stdio.h>
+#include <iostream>
 #include <signal.h> //sigint handler
 #include <iomanip> //for std::setw
 #include "rocket.hpp"
@@ -64,13 +65,28 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, on_sigint); //run on_sigint on SIGINT
     rocket::Rocket r;
     rocket::Component c = rocket::Component("main");
-    c.finishID = 4;
-    c.name = "eteted";
+    c.finish = 4;
+    c.name = "first";
+    c.setType('n');
+    std::get<rocket::nosecone>(c.props).base=100; //set nosecone wall of first to 100
     r.addComponent(c);
     rocket::Component cc = rocket::Component("two");
     cc.length = 45;
-    cc.name = "fhds"; 
+    cc.MaxDia = 4;
+    cc.position = 4;
+    cc.name = "second"; 
     r.addComponent(cc);
+    rocket::Component ccc = rocket::Component("three");
+    ccc.length = 556;
+    ccc.setType('n');
+    std::get<rocket::nosecone>(ccc.props).base=300;
+    r.addComponent(ccc);
+    // rocket::Component cccc = rocket::Component("three");
+    // cccc.length = 44543;
+    // cccc.setType('n');
+    // std::get<rocket::nosecone>(ccc.props).base=346;
+    // r.addComponent(cccc);
+
     std::cout << "Enter command, h for help, q to quit\n";
     std::cout << "Version 0.0.b"; 
     cui::printBuild();
@@ -83,7 +99,7 @@ int main(int argc, char* argv[]) {
         } else if(inp.at(0) == 'h' || inp.at(0) == 'H'){
             cui::printHelp();
         } else if(inp.at(0) == 'q' || inp.at(0) == 'Q'){
-            mat::saveMaterialsFile(mat::data);
+            mat::save(mat::data);
             exit(0);
         } else if(inp.at(0) == 'v' || inp.at(0) == 'V'){
             std::cout << "Version 0.0.";
