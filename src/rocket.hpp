@@ -18,23 +18,23 @@ using namespace nlohmann;
 
 
 namespace rocket {
-    namespace{
+    //namespace{
         struct nosecone{
             int gen;
             float param, base, slength, sbase, wall;
         };
         struct fins{
             int typ;
-            //!nyi
+            std::vector<std::vector<float>> points;
         };
         struct tube{
             float wall;
         };
-        typedef nosecone nosecone_t;
-        typedef fins fins_t;
-        typedef tube tube_t;
+        // typedef nosecone nosecone_t;
+        // typedef fins fins_t;
+        // typedef tube tube_t;
         typedef std::variant<nosecone, fins, tube> prop_t;
-    }
+    //}
 
     class Component {
         public:
@@ -62,12 +62,30 @@ namespace rocket {
                 std::cout << "\t" << "Finish: " << finish << "\n";
             }
             void setType(char t){
-                T = t;
+                try {
+                    T = t;
+                    if(t == 'n'){
+                        std::cout << "init nosecone" << "\n";
+                        nosecone n;
+                        std::get<0>(props) = n;
+                    } else if (t == 't'){
+                        std::cout << "init tube" << "\n";
+                        tube t;
+                        std::get<2>(props) = t;
+                    } else if (t == 'f'){
+                        std::cout << "init fins" << "\n";
+                        fins f;
+                        std::get<1>(props) = f;
+                    }
+                } catch (const std::bad_variant_access& e) {
+                    std::cout << e.what() << "\n";
+                }
             }
             float mass(){
                 //calculate mass of component
                 //!nyi
-                return m.props.density * volume;
+                //return m.props.density * volume;
+                return 0.0;
             }
             json get_json(){
                 //TODO commit volume to file
@@ -90,8 +108,8 @@ namespace rocket {
                     j["props"]["slength"] = n->slength;
                     j["props"]["wall"] = n->wall;
                     delete n;
-                } else if (T == 'f'){
-                    fins f = std::get<fins>(props);
+                // } else if (T == 'f'){
+                //     fins f = std::get<fins>(props);
                 } else if (T == 't'){
                     tube* t;
                     *t = std::get<tube>(props);
@@ -117,6 +135,7 @@ namespace rocket {
             Rocket()=default;
             //file constructor
             Rocket(std::string filename){
+                std::cout << "Loading from file "<<filename<<"\n";
                 std::ifstream file(filename);
                 json j = json::parse(file); // load file as json
                 for(auto i : j["components"]){
@@ -130,7 +149,7 @@ namespace rocket {
                     c->finish = i["finish"].get<int>();
                     if(c->T == 'n'){
                         //nosecone
-                        nosecone_t n;
+                        nosecone n;
                         n.base = i["props"]["base"].get<float>();
                         n.gen = i["props"]["gen"].get<int>();
                         n.param = i["props"]["param"].get<float>();
@@ -140,11 +159,13 @@ namespace rocket {
                         c->props = n;
                     } else if (c->T == 't'){
                         //bodytube
-                        tube_t t;
+                        tube t;
                         t.wall = i["props"]["wall"].get<float>();
                     } else if (c->T == 'f'){
                         //fins
                         //fins_t f
+                    } else {
+                        continue;
                     }
                     addComponent(c);
                     delete c;

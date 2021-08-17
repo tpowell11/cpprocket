@@ -71,28 +71,36 @@ int main(int argc, char* argv[]) {
     }
     signal(SIGINT, on_sigint); //run on_sigint on SIGINT
     rocket::Rocket r;
-    rocket::Component c = rocket::Component("main");
+    std::cout<<"1" << "\n";
+    rocket::Component c = rocket::Component();
     c.finish = 4;
     c.name = "first";
     c.setType('n');
-    std::get<rocket::nosecone>(c.props).base=100; //set nosecone wall of first to 100
+    std::get<0>(c.props).base=100; //set nosecone wall of first to 100
     r.addComponent(c);
-    rocket::Component cc = rocket::Component("two");
+
+    std::cout<<"2" << "\n";
+    rocket::Component cc = rocket::Component();
     cc.length = 45;
     cc.MaxDia = 4;
     cc.position = 4;
-    cc.name = "second"; 
+    cc.name = "second";
+    cc.setType('f'); 
     r.addComponent(cc);
-    rocket::Component ccc = rocket::Component("three");
+
+    std::cout << "3" << "\n";
+    rocket::Component ccc = rocket::Component();
     ccc.length = 556;
-    ccc.setType('n');
-    std::get<rocket::nosecone>(ccc.props).base=300;
+    ccc.setType('t');
+    std::get<2>(ccc.props).wall=300;
     r.addComponent(ccc);
-    // rocket::Component cccc = rocket::Component("three");
-    // cccc.length = 44543;
-    // cccc.setType('n');
-    // std::get<rocket::nosecone>(ccc.props).base=346;
-    // r.addComponent(cccc);
+
+    std::cout << "4" << "\n";
+    rocket::Component cccc = rocket::Component();
+    cccc.length = 44543;
+    cccc.setType('n');
+    std::get<0>(ccc.props).base=346;
+    r.addComponent(cccc);
 
     std::cout << "Enter command, h for help, q to quit\n";
     std::cout << "Version 0.0.b"; 
@@ -106,7 +114,7 @@ int main(int argc, char* argv[]) {
         } else if(inp.at(0) == 'h' || inp.at(0) == 'H'){
             cui::printHelp();
         } else if(inp.at(0) == 'q' || inp.at(0) == 'Q'){
-            mat::save(mat::data);
+            //mat::save(mat::data);
             exit(0);
         } else if(inp.at(0) == 'v' || inp.at(0) == 'V'){
             std::cout << "Version 0.0.";
