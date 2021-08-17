@@ -62,6 +62,13 @@ namespace cui{
 }
 
 int main(int argc, char* argv[]) {
+    for(int i; i <= argc; i++){
+        std::cout << argv[i] << "\n";
+        if(argv[i] == "-f"){
+            
+        }
+
+    }
     signal(SIGINT, on_sigint); //run on_sigint on SIGINT
     rocket::Rocket r;
     rocket::Component c = rocket::Component("main");

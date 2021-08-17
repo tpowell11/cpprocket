@@ -27,9 +27,13 @@ namespace rocket {
             int typ;
             //!nyi
         };
+        struct tube{
+            float wall;
+        };
         typedef nosecone nosecone_t;
         typedef fins fins_t;
-        typedef std::variant<nosecone, fins> prop_t;
+        typedef tube tube_t;
+        typedef std::variant<nosecone, fins, tube> prop_t;
     }
 
     class Component {
@@ -46,8 +50,9 @@ namespace rocket {
                 name = Name;
                 finish = finish;
             }
-            Component(std::string name){
-
+            Component(std::string Name, prop_t props){
+                name = Name;
+                
             }
             Component()=default;
             void show(){
@@ -76,15 +81,22 @@ namespace rocket {
                 j["name"] = name;
                 j["finish"] = finish;
                 if (T == 'n'){
-                    nosecone n = std::get<nosecone>(props);
-                    j["props"]["base"] = n.base;
-                    j["props"]["gen"] = n.gen;
-                    j["props"]["param"] = n.param;
-                    j["props"]["sbase"] = n.sbase;
-                    j["props"]["slength"] = n.slength;
-                    j["props"]["wall"] = n.wall;
+                    nosecone* n;
+                    *n = std::get<nosecone>(props);
+                    j["props"]["base"] = n->base;
+                    j["props"]["gen"] = n->gen;
+                    j["props"]["param"] = n->param;
+                    j["props"]["sbase"] = n->sbase;
+                    j["props"]["slength"] = n->slength;
+                    j["props"]["wall"] = n->wall;
+                    delete n;
                 } else if (T == 'f'){
                     fins f = std::get<fins>(props);
+                } else if (T == 't'){
+                    tube* t;
+                    *t = std::get<tube>(props);
+                    j["props"]["wall"] = t->wall;
+                    delete t;
                 }
                 return j;
             }
@@ -126,6 +138,13 @@ namespace rocket {
                         n.slength = i["props"]["slength"].get<float>();
                         n.wall= i["props"]["wall"].get<float>();
                         c->props = n;
+                    } else if (c->T == 't'){
+                        //bodytube
+                        tube_t t;
+                        t.wall = i["props"]["wall"].get<float>();
+                    } else if (c->T == 'f'){
+                        //fins
+                        //fins_t f
                     }
                     addComponent(c);
                     delete c;
