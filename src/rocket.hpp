@@ -33,7 +33,12 @@ namespace rocket {
         // typedef nosecone nosecone_t;
         // typedef fins fins_t;
         // typedef tube tube_t;
-        typedef std::variant<nosecone, fins, tube> prop_t;
+        //typedef std::variant<nosecone, fins, tube> prop_t;
+        union prop_t {
+            nosecone n;
+            fins f; 
+            tube t;
+        };
     //}
 
     class Component {
@@ -44,17 +49,18 @@ namespace rocket {
             mat::material m;
             prop_t props;
             bool isExposed = true;
-            Component(mat::material Material, std::string Name, float finish=0, bool isExposed=true){
-                //shift incoming values to correct fields
-                m = Material;
-                name = Name;
-                finish = finish;
-            }
-            Component(std::string Name, prop_t props){
-                name = Name;
+            // Component(mat::material Material, std::string Name, float finish=0, bool isExposed=true){
+            //     //shift incoming values to correct fields
+            //     m = Material;
+            //     name = Name;
+            //     finish = finish;
+            // }
+            // Component(std::string Name, prop_t props){
+            //     name = Name;
                 
-            }
+            // }
             Component()=default;
+            
             void show(){
                 std::cout << "Component" << "\n";
                 std::cout << "\t" << "Name: " << name << "\n";
@@ -62,23 +68,22 @@ namespace rocket {
                 std::cout << "\t" << "Finish: " << finish << "\n";
             }
             void setType(char t){
-                try {
-                    T = t;
-                    if(t == 'n'){
-                        std::cout << "init nosecone" << "\n";
-                        nosecone n;
-                        std::get<0>(props) = n;
-                    } else if (t == 't'){
-                        std::cout << "init tube" << "\n";
-                        tube t;
-                        std::get<2>(props) = t;
-                    } else if (t == 'f'){
-                        std::cout << "init fins" << "\n";
-                        fins f;
-                        std::get<1>(props) = f;
-                    }
-                } catch (const std::bad_variant_access& e) {
-                    std::cout << e.what() << "\n";
+                T = t;
+                if(t == 'n'){
+                    std::cout << "init nosecone" << "\n";
+                    nosecone n;
+                    //std::get<0>(props) = n;
+                    props.n = n;
+                } else if (t == 't'){
+                    std::cout << "init tube" << "\n";
+                    tube t;
+                    props.t = t;
+                    //std::get<2>(props) = t;
+                } else if (t == 'f'){
+                    std::cout << "init fins" << "\n";
+                    fins f;
+                    props.f = f;
+                    //std::get<1>(props) = f;
                 }
             }
             float mass(){
@@ -100,7 +105,8 @@ namespace rocket {
                 j["finish"] = finish;
                 if (T == 'n'){
                     nosecone* n;
-                    *n = std::get<nosecone>(props);
+                    //*n = std::get<nosecone>(props);
+                    *n = props.n;
                     j["props"]["base"] = n->base;
                     j["props"]["gen"] = n->gen;
                     j["props"]["param"] = n->param;
@@ -108,11 +114,13 @@ namespace rocket {
                     j["props"]["slength"] = n->slength;
                     j["props"]["wall"] = n->wall;
                     delete n;
-                // } else if (T == 'f'){
-                //     fins f = std::get<fins>(props);
+                } else if (T == 'f'){
+                    //fins f = std::get<fins>(props);
+                    fins f = props.f;
                 } else if (T == 't'){
                     tube* t;
-                    *t = std::get<tube>(props);
+                    //*t = std::get<tube>(props);
+                    *t = props.t;
                     j["props"]["wall"] = t->wall;
                     delete t;
                 }
@@ -133,6 +141,7 @@ namespace rocket {
             int Numcomponents;
         public:
             Rocket()=default;
+            //Rocket(){}
             //file constructor
             Rocket(std::string filename){
                 std::cout << "Loading from file "<<filename<<"\n";
@@ -147,23 +156,22 @@ namespace rocket {
                     c->position = i["position"].get<float>();
                     c->name = i["name"].get<std::string>();
                     c->finish = i["finish"].get<int>();
+                    prop_t k;
                     if(c->T == 'n'){
                         //nosecone
-                        nosecone n;
-                        n.base = i["props"]["base"].get<float>();
-                        n.gen = i["props"]["gen"].get<int>();
-                        n.param = i["props"]["param"].get<float>();
-                        n.sbase = i["props"]["sbase"].get<float>();
-                        n.slength = i["props"]["slength"].get<float>();
-                        n.wall= i["props"]["wall"].get<float>();
-                        c->props = n;
+                        k.n.base = i["props"]["base"].get<float>();
+                        k.n.gen = i["props"]["gen"].get<int>();
+                        k.n.param = i["props"]["param"].get<float>();
+                        k.n.sbase = i["props"]["sbase"].get<float>();
+                        k.n.slength = i["props"]["slength"].get<float>();
+                        k.n.wall= i["props"]["wall"].get<float>();
+                        c->props = k;
                     } else if (c->T == 't'){
                         //bodytube
-                        tube t;
-                        t.wall = i["props"]["wall"].get<float>();
+                        k.t.wall = i["props"]["wall"].get<float>();
                     } else if (c->T == 'f'){
                         //fins
-                        //fins_t f
+                        k.f.typ = 0;
                     } else {
                         continue;
                     }
