@@ -11,7 +11,7 @@
 #include <ctime> //file time stamping
 #include "json.hpp" //json
 #include "errors.hpp" //project errors
-#include "materialmanager.hpp" //materials management
+//#include "materialmanager.hpp" //materials management
 //#include "preset.hpp"
 long double PI = 3.14159265358979323846L;
 using namespace nlohmann;
@@ -22,13 +22,24 @@ namespace rocket {
         struct nosecone{
             int gen;
             float param, base, slength, sbase, wall;
+            nosecone(){
+                gen=0;
+                param, base, slength, sbase, wall = 0.0;
+            }
         };
         struct fins{
             int typ;
             std::vector<std::vector<float>> points;
+            fins(){
+                typ = 0;
+                points.clear();
+            }
         };
         struct tube{
             float wall;
+            tube(){
+                wall = 0.0;
+            }
         };
         // typedef nosecone nosecone_t;
         // typedef fins fins_t;
@@ -38,6 +49,8 @@ namespace rocket {
             nosecone n;
             fins f; 
             tube t;
+            prop_t () {};
+            ~prop_t () {};
         };
     //}
 
@@ -46,7 +59,7 @@ namespace rocket {
             char T = 0;
             float length, MaxDia, position, finish, volume = 0;
             std::string name;
-            mat::material m;
+            //mat::material m;
             prop_t props;
             bool isExposed = true;
             // Component(mat::material Material, std::string Name, float finish=0, bool isExposed=true){
@@ -59,12 +72,16 @@ namespace rocket {
             //     name = Name;
                 
             // }
-            Component()=default;
-            
+            Component(){
+                T = 0;
+            }
+            Component(const Component&){
+
+            }
             void show(){
                 std::cout << "Component" << "\n";
                 std::cout << "\t" << "Name: " << name << "\n";
-                std::cout << "\t" << "Material Name: " << m.name << "\n";
+                //std::cout << "\t" << "Material Name: " << m.name << "\n";
                 std::cout << "\t" << "Finish: " << finish << "\n";
             }
             void setType(char t){
@@ -72,18 +89,18 @@ namespace rocket {
                 if(t == 'n'){
                     std::cout << "init nosecone" << "\n";
                     nosecone n;
-                    //std::get<0>(props) = n;
+                    T = 'n';
                     props.n = n;
                 } else if (t == 't'){
                     std::cout << "init tube" << "\n";
                     tube t;
+                    T = 't';
                     props.t = t;
-                    //std::get<2>(props) = t;
                 } else if (t == 'f'){
                     std::cout << "init fins" << "\n";
                     fins f;
+                    T = 'f';
                     props.f = f;
-                    //std::get<1>(props) = f;
                 }
             }
             float mass(){
@@ -97,6 +114,7 @@ namespace rocket {
                 //returns the json for given component
                 json j;
                 j["T"] = T;
+                std::cout << T << "\n";
                 j["length"] = length;
                 j["isExposed"] = isExposed;
                 j["diam"] = MaxDia;
@@ -105,7 +123,6 @@ namespace rocket {
                 j["finish"] = finish;
                 if (T == 'n'){
                     nosecone* n;
-                    //*n = std::get<nosecone>(props);
                     *n = props.n;
                     j["props"]["base"] = n->base;
                     j["props"]["gen"] = n->gen;
@@ -115,7 +132,6 @@ namespace rocket {
                     j["props"]["wall"] = n->wall;
                     delete n;
                 } else if (T == 'f'){
-                    //fins f = std::get<fins>(props);
                     fins f = props.f;
                 } else if (T == 't'){
                     tube* t;
@@ -159,19 +175,18 @@ namespace rocket {
                     prop_t k;
                     if(c->T == 'n'){
                         //nosecone
-                        k.n.base = i["props"]["base"].get<float>();
-                        k.n.gen = i["props"]["gen"].get<int>();
-                        k.n.param = i["props"]["param"].get<float>();
-                        k.n.sbase = i["props"]["sbase"].get<float>();
-                        k.n.slength = i["props"]["slength"].get<float>();
-                        k.n.wall= i["props"]["wall"].get<float>();
-                        c->props = k;
+                        c->props.n.base = i["props"]["base"].get<float>();
+                        c->props.n.gen = i["props"]["gen"].get<int>();
+                        c->props.n.param = i["props"]["param"].get<float>();
+                        c->props.n.sbase = i["props"]["sbase"].get<float>();
+                        c->props.n.slength = i["props"]["slength"].get<float>();
+                        c->props.n.wall = i["props"]["wall"].get<float>();
                     } else if (c->T == 't'){
                         //bodytube
-                        k.t.wall = i["props"]["wall"].get<float>();
+                        c->props.t.wall = i["props"]["wall"].get<float>();
                     } else if (c->T == 'f'){
                         //fins
-                        k.f.typ = 0;
+                        //k.f.typ = 0;
                     } else {
                         continue;
                     }
@@ -213,11 +228,13 @@ namespace rocket {
                 json j;
                 j["timestamp"] = (int)std::time(0);
                 j["filename"] = filename;
-                for(auto i : components){
-                    std::cout << i.get_json() << "\n";
-                    j["components"].push_back(i.get_json());
+                for(int i; i<= components.size();i++){
+                    // std::cout << i.get_json().dump(4) << "\n";
+                    // j["components"].push_back(i.get_json());
+                    std::cout << components[i].get_json().dump(4) << "\n";
+                    j["components"].push_back(components[i].get_json());
                 }
-                std::cout << j.dump(4) << "\n";
+                //std::cout << j.dump(4) << "\n";
                 file << j.dump(4) << std::endl;
                 file.close(); 
             }
