@@ -1,4 +1,15 @@
 {
+    "components": [
+        {
+            "T": -1,
+            "diam": -3.6702423095703125,
+            "finish": -3.6701202392578125,
+            "isExposed": true,
+            "length": -3.6702423095703125,
+            "name": "",
+            "position": 4.591634678053128e-41
+        }
+    ],
     "filename": "TEST.json",
-    "timestamp": 1629748778
+    "timestamp": 1629761069
 }
