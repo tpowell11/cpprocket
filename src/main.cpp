@@ -5,10 +5,11 @@
 #include <iostream>
 #include <signal.h> //sigint handler
 #include <iomanip> //for std::setw
-#include "rocket.hpp"
+#include "../inc/rocket.hpp"
 
 void on_sigint(int sig){
     // save to temp.json on control-c
+    exit(0);
 }
 
 namespace cui{
