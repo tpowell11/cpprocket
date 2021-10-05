@@ -78,39 +78,14 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, on_sigint); //run on_sigint on SIGINT
     rocket::Rocket r;
     rocket::Component c;
-    c.finish = 4.0f;
-    std::cout << (float)c.finish << "\n";
-    c.name = (std::string)"first";
-    c.setLength(45.0f);
-    c.setType('n');
+    c.name = "test";
+    c.setLength(45.05);
     r.addComponent(c);
 
-    // std::cout<<"2" << "\n";
-    // rocket::Component cc = rocket::Component();
-    // cc.length = 45.0f;
-    // cc.MaxDia = 4.0f;
-    // cc.position = 4.0f;
-    // cc.name = "second";
-    // cc.setType('t'); 
-    // //r.addComponent(cc);
 
-    // std::cout << "3" << "\n";
-    // rocket::Component ccc = rocket::Component();
-    // ccc.length = 556.0f;
-    // ccc.setType('t');
-    // //std::get<2>(ccc.props).wall=300;
-    // r.addComponent(ccc);
-
-    // std::cout << "4" << "\n";
-    // rocket::Component cccc = rocket::Component();
-    // cccc.length = 44543.0f;
-    // cccc.setType('n');
-    // //std::get<0>(ccc.props).base=346;
-    // r.addComponent(cccc);
-
-    std::cout << "Enter command, h for help, q to quit\n";
-    std::cout << "Version 0.0.b"; 
-    cui::printBuild();
+    // std::cout << "Enter command, h for help, q to quit\n";
+    // std::cout << "Version 0.0.b"; 
+    // cui::printBuild();
     while(1){
         std::string inp = cui::promptInput<std::string>("]");
         if(inp.at(0) == 'c' || inp.at(0) == 'C'){
@@ -127,7 +102,6 @@ int main(int argc, char* argv[]) {
             cui::printBuild();
         } else if(inp.at(0) == 's' || inp.at(0) == 'S'){
             r.save("q.json");
-            exit(0);
         }
     }
 }

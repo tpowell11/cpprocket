@@ -75,6 +75,7 @@ namespace rocket {
                 std::cout << "\t" << "Name: " << name << "\n";
                 //std::cout << "\t" << "Material Name: " << m.name << "\n";
                 std::cout << "\t" << "Finish: " << finish << "\n";
+                std::cout << "\t" << "Length: " << length << "\n";
             }
             void setLength(float v){
                 length = v;
@@ -199,14 +200,14 @@ namespace rocket {
             //adds components to the vector
             void addComponent(Component part){
                 components.push_back(part);
-                //part.show();
+                part.show();
             }
             void addComponent(Component* part){
                 components.push_back(*part);
             }
             void show(){
                 for(auto i : components){
-                    std::cout << i.name << "\n";
+                    std::cout << i.T << "\n";
                 }
             }
             //update the total fields & check for errors
@@ -230,16 +231,10 @@ namespace rocket {
                 j["timestamp"] = (int)std::time(0);
                 j["filename"] = filename;
                 for(auto i:components){
-                //for(int i=0; i<components.size();i++){
                     std::cout << i.getLength() << "\n";
-                    //std::cout << i.get_json().dump(4) << "\n";
                     j["components"].push_back(i.get_json());
-                    //std::cout << components[i].length;
-                    //std::cout << components[i].get_json().dump(4) << "\n";
-                    //j["components"].push_back(components[i].get_json());
                 }
-                std::cout << j.dump(4) << "\n";
-                //file << j.dump(4) << std::endl;
+                file << j.dump(4) << std::endl;
                 file.close(); 
             }
 
