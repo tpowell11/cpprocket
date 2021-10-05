@@ -18,33 +18,46 @@ using namespace nlohmann;
 
 
 namespace rocket {
-    //namespace{
-        struct nosecone{
-            int gen;
-            float param, base, slength, sbase, wall;
-            nosecone(){}
-        };
-        struct fins{
-            int typ;
-            std::vector<std::vector<float>> points;
-            fins(){}
-        };
-        struct tube{
-            float wall;
-            tube(){}
-        };
-        // typedef nosecone nosecone_t;
-        // typedef fins fins_t;
-        // typedef tube tube_t;
-        //typedef std::variant<nosecone, fins, tube> prop_t;
-        union prop_t {
-            nosecone n;
-            fins f; 
-            tube t;
-            prop_t () {};
-            ~prop_t () {};
-        };
-    //}
+    struct nosecone{
+        int gen;
+        float param, base, slength, sbase, wall;
+        nosecone(){}
+        nosecone(nosecone *n){
+            gen = n->gen;
+            param = n->param;
+            base = n->base;
+            slength = n->slength;
+            sbase = n->sbase;
+            wall = n->wall;
+        }
+    };
+    struct fins{
+        int typ;
+        std::vector<std::vector<float>> points;
+        fins(){}
+        fins(fins *f){
+            typ = f->typ;
+            points = f->points;
+        }
+    };
+    struct tube{
+        float wall;
+        tube(){}
+        tube(tube *t){
+            wall = t->wall;
+        }
+    };
+    // typedef nosecone nosecone_t;
+    // typedef fins fins_t;
+    // typedef tube tube_t;
+    //typedef std::variant<nosecone, fins, tube> prop_t;
+    union prop_t {
+        nosecone n;
+        fins f; 
+        tube t;
+        prop_t () {};
+        ~prop_t () {};
+    };
 
     class Component {
         private:
@@ -99,14 +112,16 @@ namespace rocket {
                 //returns the json for given component
                 json j;
                 j["T"] = T;
-                //std::cout << T << "\n";
+                std::cout << T << "\n";
                 j["length"] = length;
+                std::cout << length << "\n";
                 j["isExposed"] = isExposed;
                 j["diam"] = MaxDia;
                 j["position"] = position;
                 j["name"] = name;
                 j["finish"] = finish;
                 if (T == 'n'){
+                    std::cout << "saving Nosecone\n";
                     nosecone n;
                     n = props.n;
                     j["props"]["base"] = n.base;
@@ -116,8 +131,10 @@ namespace rocket {
                     j["props"]["slength"] = n.slength;
                     j["props"]["wall"] = n.wall;
                 } else if (T == 'f'){
+                    std::cout << "saving Fins\n";
                     fins f = props.f;
                 } else if (T == 't'){
+                    std::cout << "saving Bodytube\n";
                     tube* t;
                     //*t = std::get<tube>(props);
                     *t = props.t;
@@ -195,7 +212,7 @@ namespace rocket {
             //update the total fields & check for errors
             void update(){
                 Tlength,Tmass, MXdiam = 0;
-                float lastdiam;
+                //float lastdiam;
                 //std::vector<float> diams;
                 for(auto i : components){
                     Numcomponents ++;
@@ -215,14 +232,14 @@ namespace rocket {
                 for(auto i:components){
                 //for(int i=0; i<components.size();i++){
                     std::cout << i.getLength() << "\n";
-                    std::cout << i.get_json().dump(4) << "\n";
+                    //std::cout << i.get_json().dump(4) << "\n";
                     j["components"].push_back(i.get_json());
                     //std::cout << components[i].length;
                     //std::cout << components[i].get_json().dump(4) << "\n";
                     //j["components"].push_back(components[i].get_json());
                 }
-                //std::cout << j.dump(4) << "\n";
-                file << j.dump(4) << std::endl;
+                std::cout << j.dump(4) << "\n";
+                //file << j.dump(4) << std::endl;
                 file.close(); 
             }
 

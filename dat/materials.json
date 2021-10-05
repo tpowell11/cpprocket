@@ -1,10 +1,10 @@
 {
-    "none":{
-        "density":0.0,
-        "strength":0.0
+    "balsa": {
+        "density": 1.0,
+        "strength": 1.0
     },
-    "balsa":{
-        "density":1.0,
-        "strength":1.0
+    "none": {
+        "density": 0.0,
+        "strength": 0.0
     }
 }

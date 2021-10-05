@@ -5,6 +5,7 @@
 #include <iostream>
 #include <signal.h> //sigint handler
 #include <iomanip> //for std::setw
+#include <variant>
 #include "../inc/rocket.hpp"
 
 void on_sigint(int sig){
@@ -13,7 +14,7 @@ void on_sigint(int sig){
 }
 
 namespace cui{
-    //simple prompted input
+//* simple prompted input
     const char* f = 0;
     template<typename t>
     inline t const promptInput(const char* prompt = f){
@@ -80,10 +81,8 @@ int main(int argc, char* argv[]) {
     c.finish = 4.0f;
     std::cout << (float)c.finish << "\n";
     c.name = (std::string)"first";
-    //c.length = 34.0f;
     c.setLength(45.0f);
     c.setType('n');
-    //std::get<0>(c.props).base=100; //set nosecone wall of first to 100
     r.addComponent(c);
 
     // std::cout<<"2" << "\n";
@@ -127,7 +126,8 @@ int main(int argc, char* argv[]) {
             std::cout << "Version 0.0.";
             cui::printBuild();
         } else if(inp.at(0) == 's' || inp.at(0) == 'S'){
-            r.save("TEST.json");
+            r.save("q.json");
+            exit(0);
         }
     }
 }
