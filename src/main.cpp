@@ -79,7 +79,9 @@ int main(int argc, char* argv[]) {
     rocket::Rocket r;
     rocket::Component c;
     c.name = "test";
-    c.setLength(45.05);
+    c.length = 45.7;
+    c.T = 'n';
+    //c.setLength(45.05);
     r.addComponent(c);
 
 

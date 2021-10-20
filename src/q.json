@@ -1,15 +1,23 @@
 {
     "components": [
         {
-            "T": 0,
-            "diam": 0.0,
+            "T": 110,
+            "diam": null,
             "finish": 0.0,
             "isExposed": true,
-            "length": 0.0,
-            "name": "",
-            "position": 0.0
+            "length": 45.70000076293945,
+            "name": "test",
+            "position": null,
+            "props": {
+                "base": 0.0,
+                "gen": 0,
+                "param": 0.0,
+                "sbase": 0.0,
+                "slength": 0.0,
+                "wall": 0.0
+            }
         }
     ],
     "filename": "q.json",
-    "timestamp": 1633394744
+    "timestamp": 1634693414
 }
