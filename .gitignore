@@ -33,5 +33,6 @@
 
 # testing file
 t.cpp
+q.json
 # ccls
 /.ccls-cache
