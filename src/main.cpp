@@ -55,7 +55,8 @@ namespace cui{
         "Select component type to add\n"
         "[1]Nosecone\n"
         "[2]Bodytube\n"
-        "[3]Switch to internal components\ncomponents]";
+        "[3]Fins"
+        "\ncomponents]";
         int inp = cui::promptInput<int>(s);
         return inp;
     }
@@ -78,11 +79,16 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, on_sigint); //run on_sigint on SIGINT
     rocket::Rocket r;
     rocket::Component c;
-    c.name = "test";
+    c.name = "nosecone";
     c.length = 45.7;
-    c.T = 'n';
-    //c.setLength(45.05);
+    //c.T = 'n';
+    c.setType('n');
     r.addComponent(c);
+    rocket::Component cc;
+    cc.name = "fins";
+    cc.setType('f');
+    //cc.T = 'f';
+    //std::get<rocket::fins>(cc.props).thickness=300.34;
 
 
     // std::cout << "Enter command, h for help, q to quit\n";
@@ -91,6 +97,10 @@ int main(int argc, char* argv[]) {
     while(1){
         std::string inp = cui::promptInput<std::string>("]");
         if(inp.at(0) == 'c' || inp.at(0) == 'C'){
+        //     switch(cui::selectComponentType()) {
+        //         case 1: 
+
+        //     }
             
         } else if(inp.at(0) == 'l' || inp.at(0) == 'L'){
             r.show();

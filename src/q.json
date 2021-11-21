@@ -2,12 +2,12 @@
     "components": [
         {
             "T": 110,
-            "diam": null,
+            "diam": 0.0,
             "finish": 0.0,
             "isExposed": true,
             "length": 45.70000076293945,
-            "name": "test",
-            "position": null,
+            "name": "nosecone",
+            "position": 0.0,
             "props": {
                 "base": 0.0,
                 "gen": 0,
@@ -19,5 +19,5 @@
         }
     ],
     "filename": "q.json",
-    "timestamp": 1634693414
+    "timestamp": 1635856079
 }

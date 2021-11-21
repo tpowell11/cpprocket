@@ -18,24 +18,45 @@ using namespace nlohmann;
 
 
 namespace rocket {
-    namespace{
-        struct nosecone{
-            int gen;
-            float param, base, slength, sbase, wall;
-        };
-        struct fins{
-            int typ;
-            //!nyi
-        };
-        typedef nosecone nosecone_t;
-        typedef fins fins_t;
-        typedef std::variant<nosecone, fins> prop_t;
+    struct nosecone{
+        //parameters for a nosecone
+        int gen;
+        float param, base, slength, sbase, wall;
+        void Zero(){
+            gen = 0;
+            param, base, gen, slength, sbase, wall = 0.0;
+        }
+    };
+    struct fins{
+        int typ;
+        float thickness;
+        std::vector<std::tuple<float,float>> P;
+        void Zero(){
+            typ = 0;
+            thickness = 0;
+            for(auto i : P){
+                i = std::make_tuple((float)0.0,(float)0.0);
+            }
+        }
+    };
+    struct tube{
+        float innerDiameter;
+        void Zero(){
+            innerDiameter = 0.0;
+        }
+    };
+    typedef nosecone nosecone_t;
+    typedef fins fins_t;
+    typedef tube tube_t;
+    typedef std::variant<nosecone, fins, tube> prop_t;
+    prop_t::prop_t(nosecone * n){
+        
     }
-
     class Component {
-        public:
+        private:
             char T = 0;
-            float length, MaxDia, position, finish, volume = 0;
+        public:
+            float length, MaxDia, position, finish, volume = 0; //universal properties
             std::string name;
             mat::material m;
             prop_t props;
@@ -46,9 +67,6 @@ namespace rocket {
                 name = Name;
                 finish = finish;
             }
-            Component(std::string name){
-
-            }
             Component()=default;
             void show(){
                 std::cout << "Component" << "\n";
@@ -57,7 +75,28 @@ namespace rocket {
                 std::cout << "\t" << "Finish: " << finish << "\n";
             }
             void setType(char t){
+                //ensures that changing the type identifier changes the contents of @props. 
                 T = t;
+                switch(t){
+                    case "n" || "N":
+                        nosecone *n;
+                        n->Zero();
+                        props = n;
+                        delete n;
+                    case "t" || "T":
+                        tube *t;
+                        t->Zero();
+                        props = t;
+                        delete t;
+                    case "f" || "F":
+                        fins *f;
+                        f->Zero();
+                        props = f;
+                        delete f;
+                }
+            }
+            char getType(){
+                return T;
             }
             float mass(){
                 //calculate mass of component
@@ -85,6 +124,15 @@ namespace rocket {
                     j["props"]["wall"] = n.wall;
                 } else if (T == 'f'){
                     fins f = std::get<fins>(props);
+                    j["props"]["typ"] = f.typ;
+                    j["props"]["thickness"] = f.thickness;
+                    for(auto i : f.P){
+                        //loops through each tuple in points
+                        j["props"]["points"] = i;
+                    }
+                } else if (T == 'b'){
+                    tube t = std::get<tube>(props);
+                    j["props"]["ID"] = t.innerDiameter;
                 }
                 return j;
             }
@@ -109,14 +157,15 @@ namespace rocket {
                 json j = json::parse(file); // load file as json
                 for(auto i : j["components"]){
                     Component *c = new Component;
-                    c->T = i["T"].get<char>();
+                    //c->T = i["T"].get<char>();
+                    c->getType() = i["T"].get<char>()
                     c->length = i["length"].get<float>();
                     c->isExposed = i["isExposed"].get<bool>();
                     c->MaxDia = i["diam"].get<float>();
                     c->position = i["position"].get<float>();
                     c->name = i["name"].get<std::string>();
                     c->finish = i["finish"].get<int>();
-                    if(c->T == 'n'){
+                    if(c->getType() == 'n'){
                         //nosecone
                         nosecone_t n;
                         n.base = i["props"]["base"].get<float>();
