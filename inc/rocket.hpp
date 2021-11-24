@@ -187,6 +187,9 @@ namespace rocket {
                 }
                 file.close();
             }
+            std::string getName() {
+                return this->name;
+            }
             //adds components to the vector
             void addComponent(Component part){
                 components.push_back(part);
