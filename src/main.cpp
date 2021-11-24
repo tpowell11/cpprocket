@@ -87,6 +87,7 @@ int main(int argc, char* argv[]) {
     rocket::Component cc;
     cc.name = "fins";
     cc.setType('f');
+    r.addComponent(cc);
     //cc.T = 'f';
     //std::get<rocket::fins>(cc.props).thickness=300.34;
 

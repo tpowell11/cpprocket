@@ -16,8 +16,21 @@
                 "slength": 0.0,
                 "wall": 0.0
             }
+        },
+        {
+            "T": 102,
+            "diam": 0.0,
+            "finish": 0.0,
+            "isExposed": true,
+            "length": 0.0,
+            "name": "fins",
+            "position": 0.0,
+            "props": {
+                "thickness": 0.0,
+                "typ": 0
+            }
         }
     ],
     "filename": "q.json",
-    "timestamp": 1635856079
+    "timestamp": 1637774794
 }

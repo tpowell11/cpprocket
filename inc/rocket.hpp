@@ -23,8 +23,12 @@ namespace rocket {
         int gen;
         float param, base, slength, sbase, wall;
         void Zero(){
-            gen = 0;
-            param, base, gen, slength, sbase, wall = 0.0;
+            this->param=(float)0;
+            this->base=(float)0;
+            this->gen=(float)0;
+            this->slength=(float)0;
+            this->sbase=(float)0;
+            this->wall=(float)0;
         }
     };
     struct fins{
@@ -32,9 +36,9 @@ namespace rocket {
         float thickness;
         std::vector<std::tuple<float,float>> P;
         void Zero(){
-            typ = 0;
-            thickness = 0;
-            for(auto i : P){
+            this->typ = (float)0;
+            this->thickness = (float)0;
+            for(auto i : this->P){
                 i = std::make_tuple((float)0.0,(float)0.0);
             }
         }
@@ -49,9 +53,6 @@ namespace rocket {
     typedef fins fins_t;
     typedef tube tube_t;
     typedef std::variant<nosecone, fins, tube> prop_t;
-    prop_t::prop_t(nosecone * n){
-        
-    }
     class Component {
         private:
             char T = 0;
@@ -67,7 +68,9 @@ namespace rocket {
                 name = Name;
                 finish = finish;
             }
-            Component()=default;
+            Component(){
+                this->Zero();
+            };
             void show(){
                 std::cout << "Component" << "\n";
                 std::cout << "\t" << "Name: " << name << "\n";
@@ -77,23 +80,19 @@ namespace rocket {
             void setType(char t){
                 //ensures that changing the type identifier changes the contents of @props. 
                 T = t;
-                switch(t){
-                    case "n" || "N":
-                        nosecone *n;
-                        n->Zero();
-                        props = n;
-                        delete n;
-                    case "t" || "T":
-                        tube *t;
-                        t->Zero();
-                        props = t;
-                        delete t;
-                    case "f" || "F":
-                        fins *f;
-                        f->Zero();
-                        props = f;
-                        delete f;
+                if (this->T == 'n')
+                {
+                    nosecone N;
+                    N.Zero();
+                    this->props = N;
+                } else if (this->T == 'f')
+                {
+                    fins F;
+                    F.Zero();
+                    this->props=F;
                 }
+                
+                
             }
             char getType(){
                 return T;
@@ -136,6 +135,14 @@ namespace rocket {
                 }
                 return j;
             }
+            void Zero(){
+                this->length=(float)0;
+                this->MaxDia=(float)0;
+                this->name="";
+                this->position=(float)0;
+                this->volume=(float)0;
+                this->finish=(float)0;
+            }
     };
     //cout overload for components
     std::ostream &operator<<(std::ostream &os, Component const &m){
@@ -157,8 +164,7 @@ namespace rocket {
                 json j = json::parse(file); // load file as json
                 for(auto i : j["components"]){
                     Component *c = new Component;
-                    //c->T = i["T"].get<char>();
-                    c->getType() = i["T"].get<char>()
+                    //c->getType() = i["T"].get<char>();
                     c->length = i["length"].get<float>();
                     c->isExposed = i["isExposed"].get<bool>();
                     c->MaxDia = i["diam"].get<float>();
@@ -215,7 +221,7 @@ namespace rocket {
                 j["timestamp"] = (int)std::time(0);
                 j["filename"] = filename;
                 for(auto i : components){
-                    std::cout << i.get_json() << "\n";
+                    //std::cout << i.get_json() << "\n";
                     j["components"].push_back(i.get_json());
                 }
                 std::cout << j.dump(4) << "\n";
