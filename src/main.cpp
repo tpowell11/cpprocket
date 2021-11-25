@@ -6,6 +6,7 @@
 #include <signal.h> //sigint handler
 #include <iomanip> //for std::setw
 #include <variant>
+#include <string>
 #include "../inc/rocket.hpp"
 
 void on_sigint(int sig){
@@ -15,9 +16,8 @@ void on_sigint(int sig){
 
 namespace cui{
 //* simple prompted input
-    const char* f = 0;
     template<typename t>
-    inline t const promptInput(const char* prompt = f){
+    inline t const promptInput(std::string prompt){
         std::variant<t,char> inp;
         std::cout << prompt;
         std::cin >> std::get<t>(inp);
@@ -81,28 +81,27 @@ int main(int argc, char* argv[]) {
     rocket::Component c;
     c.name = "nosecone";
     c.length = 45.7;
-    //c.T = 'n';
     c.setType('n');
     r.addComponent(c);
     rocket::Component cc;
     cc.name = "fins";
     cc.setType('f');
     r.addComponent(cc);
-    //cc.T = 'f';
-    //std::get<rocket::fins>(cc.props).thickness=300.34;
-
-
-    // std::cout << "Enter command, h for help, q to quit\n";
-    // std::cout << "Version 0.0.b"; 
-    // cui::printBuild();
     while(1){
         std::string inp = cui::promptInput<std::string>("]");
         if(inp.at(0) == 'c' || inp.at(0) == 'C'){
-        //     switch(cui::selectComponentType()) {
-        //         case 1: 
-
-        //     }
-            
+            char choice = cui::promptInput<char>("Component Type:\n");
+            rocket::Component *c = new rocket::Component;
+            if (choice == 'b' || 'B'){
+                c->setType('b');
+                std::cout << "Selected Bodytube\n";
+            } else if (choice == 'n' || 'N'){
+                c->setType('n');
+                std::cout << "Selected Nosecone\n";
+            } else if (choice == 'f' || 'F'){
+                c->setType('f');
+                std::cout << "Selected Fins\n";
+            }
         } else if(inp.at(0) == 'l' || inp.at(0) == 'L'){
             r.show();
         } else if(inp.at(0) == 'h' || inp.at(0) == 'H'){
