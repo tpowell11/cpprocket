@@ -8,61 +8,14 @@
 #include <variant>
 #include <string>
 #include "../inc/rocket.hpp"
+#include "../inc/cui.hpp"
 
 void on_sigint(int sig){
     // save to temp.json on control-c
     exit(0);
 }
 
-namespace cui{
-//* simple prompted input
-    template<typename t>
-    inline t const promptInput(std::string prompt){
-        std::variant<t,char> inp;
-        std::cout << prompt;
-        std::cin >> std::get<t>(inp);
-        return std::get<t>(inp);
-    }
-//* print help from file
-    void printHelp(){
-        std::ifstream f;
-        f.open("help.txt");
-        if(f.is_open()){
-            std::cout << f.rdbuf() << "\n";
-        }
-    }
-//* print version number
-    void printBuild(){
-        std::ifstream f("../dat/version.txt");
-        if(f.is_open()){
-            std::cout << f.rdbuf() << "\n";
-        }
-    }
-//* reusable prompt strings
 
-    const char* constMethodPrompt = "Select Construction Method:\n"
-    "[1]Preset (dat/presets.json)\n"
-    "[2]Parameter input\n"
-    "c]";
-    const char* matMethodPrompt = "Choose material selection method:\n"
-    "[1]Existing (dat/materials.json)\n"
-    "[2]Create new\nmaterial]";
-    const char* presetPrompt = "Enter Preset Name\nmaterial]";
-//* selection dialogs
-
-    int selectComponentType(){
-        const char* s = 
-        "Select component type to add\n"
-        "[1]Nosecone\n"
-        "[2]Bodytube\n"
-        "[3]Fins"
-        "\ncomponents]";
-        int inp = cui::promptInput<int>(s);
-        return inp;
-    }
-
-
-}
 
 int main(int argc, char* argv[]) {
     // for(int i; i <= argc; i++){
