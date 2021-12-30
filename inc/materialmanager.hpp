@@ -1,45 +1,44 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <map>
+#include <string>
 #include "json.hpp"
 #include "errors.hpp"
 using namespace nlohmann;
-//json data; //! find workaround to this
 namespace mat{
-    namespace{
-        json load(std::string name){
-            std::ifstream f(name);
-            json j = json::parse(f);
-            return j;
-            f.close();
-        }
-        json data = load("../dat/materials.json"); //load materials
-    }
-    void save(std::string name){
-        std::ofstream o(name);
-        o << std::setw(4) << data << std::endl;
-    }
-//* unions & structs
-    struct Material{
-        float density; //normal or linear density, in kg/m3 or kg/m respectively
-        float strength; //unit depends on @char type, see docs
+    struct Material {
+        std::string name;
+        float density;
+        float strength;
     };
-//* Structural materials
-
-    class material{
+    class matManager {
+        private:
+        std::vector<std::string> ValidNames;
+        json data;
         public:
-            struct Material props;
-            std::string name;
-            material(std::string Name){
-                std::string name = Name;
-                props.density=data["struct"][Name]["density"].get<float>();
-                props.strength=data["struct"][Name]["strength"].get<float>();
+        matManager(std::string path){
+            std::ifstream f(path);
+            data=json::parse(f);
+            f.close();
+            for (auto i : data.items()){
+                std::cout << i.key() << "\n";
             }
-            material()=default;
-            ~material()=default;
-            float getMass(float amount){
-                return props.density * amount;
+        }
+        Material getMatfStr(std::string name){
+            Material m;
+            if (*std::find(ValidNames.begin(), ValidNames.end(),name) == name){
+                m.name = name;
+                m.density = data[name]["density"];
+                m.strength = data[name]["strength"];
+                return m; 
+            } else {
+                throw("m001");
+                std::cerr << "m001: invalid material name\n";
             }
+            //delete m;
+        }
+        void dumpJ(int indent){
+            std::cout << data.dump(indent) << "\n";
+        }
     };
 }

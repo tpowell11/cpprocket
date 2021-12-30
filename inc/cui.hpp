@@ -9,14 +9,14 @@ namespace cui{
 // Simple prompted input
     template<typename t>
     t promptInput(std::string prompt){
-        t inp;
+        char inp;
         std::cout << prompt;
-        std::cin >> (t)inp;
-        return inp;
+        std::cin >> inp;
+        return static_cast<t>(inp);
     }
 // Print from file
     void printFile(std::string filename) {
         std::ifstream f(filename);
-
+        std::cout << f.rdbuf() << "\n";
     }
 }

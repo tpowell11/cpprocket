@@ -18,6 +18,10 @@ using namespace nlohmann;
 
 
 namespace rocket {
+    struct motor {
+        std::string code;
+        float Isp, Mp, Tb; 
+    };
     struct nosecone{
         //parameters for a nosecone
         int gen;
@@ -56,12 +60,13 @@ namespace rocket {
     class Component {
         private:
             char T = 0;
+            mat::matManager MM;
         public:
             float length, MaxDia, position, finish, volume = 0; //universal properties
             std::string name;
             mat::material m;
             prop_t props;
-            bool isExposed = true;
+            bool isExposed = true; 
             Component(mat::material Material, std::string Name, float finish=0, bool isExposed=true){
                 //shift incoming values to correct fields
                 m = Material;
@@ -91,8 +96,6 @@ namespace rocket {
                     F.Zero();
                     this->props=F;
                 }
-                
-                
             }
             char getType(){
                 return T;
@@ -158,6 +161,8 @@ namespace rocket {
             int Numcomponents;
         public:
             Rocket()=default;
+            motor Motor;
+            float Cd;
             //file constructor
             Rocket(std::string filename){
                 std::ifstream file(filename);
@@ -202,6 +207,15 @@ namespace rocket {
                 for(auto i : components){
                     std::cout << i.name << "\n";
                 }
+            }
+            //calculate total constant mass of the rocket
+            float mass(){
+                float* sum;
+                for(auto i : this->components){
+                    *sum += i.mass();
+                }
+                return *sum;
+                delete sum;
             }
             //update the total fields & check for errors
             void update(){

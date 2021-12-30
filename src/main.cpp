@@ -9,7 +9,7 @@
 #include <string>
 #include "../inc/rocket.hpp"
 #include "../inc/cui.hpp"
-
+#include "../inc/Simulator.hpp"
 void on_sigint(int sig){
     // save to temp.json on control-c
     exit(0);
@@ -40,6 +40,20 @@ int main(int argc, char* argv[]) {
     cc.name = "fins";
     cc.setType('f');
     r.addComponent(cc);
+    rocket::motor m; 
+    m.Isp = 39.70;
+    m.Mp = .0184;
+    m.Tb = 1.2;
+    r.motor = m;
+    Simulator::SimAtmosphericConfig a;
+    a.w = {0,0};
+    a.rho = [](float h) -> float {return 1.21;};
+    Simulator::SimConfig conf;
+    conf.dt = .01;
+    conf.g = 9.81;
+    conf.maxT = 30;
+    Simulator::Simulator S(r,a);
+    S.RunEuler(conf);
     while(1){
         std::string inp = cui::promptInput<std::string>("]");
         if(inp.at(0) == 'c' || inp.at(0) == 'C'){
@@ -58,13 +72,13 @@ int main(int argc, char* argv[]) {
         } else if(inp.at(0) == 'l' || inp.at(0) == 'L'){
             r.show();
         } else if(inp.at(0) == 'h' || inp.at(0) == 'H'){
-            cui::printHelp();
+            cui::printFile("../dat/version.txt");
         } else if(inp.at(0) == 'q' || inp.at(0) == 'Q'){
             //mat::save(mat::data);
             exit(0);
         } else if(inp.at(0) == 'v' || inp.at(0) == 'V'){
             std::cout << "Version 0.0.";
-            cui::printBuild();
+            cui::printFile("../dat/version.txt");
         } else if(inp.at(0) == 's' || inp.at(0) == 'S'){
             r.save("q.json");
         }
